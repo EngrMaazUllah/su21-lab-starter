@@ -1,3 +1,6 @@
+#include <assert.h>
+#include <stdio.h>
+
 #include <string.h>
 #include "pwd_checker.h"
 
@@ -21,19 +24,19 @@ For the simplicity of this exercise:
 /* Returns true if the length of PASSWORD is at least 10, false otherwise */
 bool check_length(const char *password) {
     int length = strlen(password);
-    bool meets_len_req = (length <= 10);
+    bool meets_len_req = (length >= 10); // sign should be >= for length atleast 10
     return meets_len_req;
 }
 
 /* Returns true if LETTER is in the range [LOWER, UPPER], false otherwise */
 bool check_range(char letter, char lower, char upper) {
-    bool is_in_range = (letter > lower && letter < upper);
+    bool is_in_range = (letter >= lower && letter <= upper); // equal to sign should be added for including A and Z
     return is_in_range;
 }
 
 /* Returns true if PASSWORD contains at least one upper case letter, false otherwise */
 bool check_upper(const char *password) {
-    while (password != '\0') {
+    while (*password != '\0') { //* should be added to check if the current character pointed by password is not null 
         bool is_in_range = check_range(*password, 'A', 'Z');
         if (is_in_range) {
             return true;
@@ -57,8 +60,9 @@ bool check_lower(const char *password) {
 
 /* Returns true if PASSWORD contains at least one number, false otherwise */
 bool check_number(const char *password) {
-    while (password != '\0') {
-        if (check_range(password, 0, 9)) {
+    while (*password != '\0') {
+        if (check_range(*password, '0', '9')) { 
+        // should be added to pass the current character (*password) instead of the entire string (password) ,0 9 are put in single quote to make a character
             return true;
         }
         ++password;
@@ -72,18 +76,32 @@ bool check_name(const char *first_name, const char *last_name, const char *passw
         To exit the man pages, press 'q' */
     /* Hint: a NULL pointer will evaluate to False in a logical statement while a non-NULL pointer
         will evaluate to True */
-    const char *first = strstr(*password, first_name);
+    const char *first = strstr(password, first_name);
     const char *last = strstr(password, last_name);
-    return (first && last);
+    return !(first || last); //to return true if neither first nor last name is found in the password.
 }
 
 /* Returns true if PASSWORD meets the conditions specified above */
 bool check_password(const char *first_name, const char *last_name, const char *password) {
     bool length, upper, lower, number, name;
     lower = check_lower(password);
+    //assert(lower);
+    //printf("lower is working alright\n");
     length = check_length(password);
+    //assert(length);
+    //printf("length is working alright\n");
     name = check_name(first_name, last_name, password);
+    //assert(name);
+    //printf("name is working alright\n");
+    
     number = check_number(password);
+    //assert(number);
+    
+   // printf("number is working alright\n");
+    
     upper = check_upper(password);
+   // assert(upper);
+   // printf("upper is working alright\n");
+    
     return (lower && length && name && upper && number);
 }

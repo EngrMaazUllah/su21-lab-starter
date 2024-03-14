@@ -77,7 +77,18 @@ main:
 # Think: why might having a1 be useful?
 f:
     # YOUR CODE GOES HERE!
-
+    #starting prologue
+    addi sp,sp,-4
+    sw s0,0(sp)
+    
+    add a1,s0,a1 #adding offset s0 in a1
+    lw a0,0(a1) #load word at address a1
+    addi s0,s0,4 #incrementing s0 with 4 to load next word
+    sw s0,0(sp) #storing the incremented s0 on stack
+    
+    #starting epilogue
+    lw s0,0(sp)
+    addi sp,sp,4
     jr ra               # Always remember to jr ra after your function!
 
 print_int:

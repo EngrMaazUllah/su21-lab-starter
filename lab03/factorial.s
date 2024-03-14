@@ -21,4 +21,14 @@ main:
     ecall # Exit
 
 factorial:
-    # YOUR CODE HERE
+    add t1, a0, x0  #initilizing the value of t1 to zero 
+    addi t2, x0, 1  # its for the iteration if loop
+    addi a0, x0, 1 
+    loop:
+    bge t2, t1 , exit # if 1>=n so the goto exit  
+    mul a0, a0, t1   # 
+    addi t1, t1, -1
+    j loop
+    
+exit:
+    ret
